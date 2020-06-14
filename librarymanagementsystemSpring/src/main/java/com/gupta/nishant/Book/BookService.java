@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.UUID;
 
 
 @Service
@@ -33,7 +34,7 @@ public class BookService implements BookInterface{
             throw new BookNotAllotedException("Book is not alloted, hence return book operation not allowed.");
         }
         else{
-            Date allotmentDate = book.getAllotementDate();
+            Date allotmentDate = book.getAllotmentDate();
             Date today = new Date();
             int actualDurationDays = this.calculateDifferenceInDays(allotmentDate, today);
             int bookAllotmentDuration = book.getAllotmentDurationDays();
@@ -47,22 +48,25 @@ public class BookService implements BookInterface{
     }
 
     @Override
-    public Rack findBook(Book book) throws BookNotFoundException {
+    public Rack findBook(UUID uuid) throws BookNotFoundException {
+        Book book = bookRepository.findBookByUUID(uuid);
         return rackService.findBook(book);
     }
 
     @Override
-    public Rack addBook(Book book) {
+    public Book addBook(Book book) {
+        bookRepository.addBook(book);
         return rackService.addBookToRack(book);
     }
 
     @Override
-    public boolean allotBook(Book book, int allotmentDurationDays) {
-        return bookRepository.allotBook(book, allotmentDurationDays);
+    public boolean allotBook(UUID uuid, int allotmentDurationDays) {
+        return bookRepository.allotBook(uuid, allotmentDurationDays);
     }
 
     @Override
-    public long returnBook(Book book) throws BookNotAllotedException, BookNotFoundException{
+    public long returnBook(UUID uuid) throws BookNotAllotedException, BookNotFoundException{
+        Book book = bookRepository.findBookByUUID(uuid);
 //        Compute fine for the duration as per allotment
         long fineToBePaid = this.computeFine(book);
         // mark book availability status as AVAILABLE

@@ -2,14 +2,45 @@ package com.gupta.nishant.Book;
 
 import org.springframework.stereotype.Repository;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Repository
 public class BookRepository{
+    private Map<UUID, Book> allBookObjects = new HashMap<>();
 
+    public boolean allotBook(UUID uuid, int allotmentDurationDays){
+//        Mark the book status as alloted on current date for allotmentDurationDays days
+        Book book = this.findBookByUUID(uuid);
+        book.setAvailabilityStatus(BookAvailabilityEnum.AvailabilityStatus.ALLOTED);
+        book.setAllotmentDate(new Date());
+        book.setAllotmentDurationDays(allotmentDurationDays);
+//        Below is used to persist to the actual data structure
+        this.addBook(book);
+        return true;
+    }
+
+    public void returnBook(Book book){
+        book.setAvailabilityStatus(BookAvailabilityEnum.AvailabilityStatus.AVAILABLE);
+        book.setAllotmentDate(null);
+        book.setAllotmentDurationDays(0);
+        //        Below is used to persist to the actual data structure
+        this.addBook(book);
+    }
+
+    public Book findBookByUUID(UUID uuid){
+        return allBookObjects.get(uuid);
+    }
+
+    public Book addBook(Book book){
+        return allBookObjects.put(book.getUuid(), book);
+    }
+
+
+
+
+
+//    Below code is used in book controller
     private Map<Book, Integer> booksMap;
 
     public BookRepository(Map<Book, Integer> booksMap) {
@@ -44,20 +75,6 @@ public class BookRepository{
                 booksMap.put(book,bookCountAfterFetch);
             return book;
         }
-    }
-
-    public boolean allotBook(Book book, int allotmentDurationDays){
-//        Mark the book status as alloted on current date for allotmentDurationDays days
-        book.setAvailabilityStatus(BookAvailabilityEnum.AvailabilityStatus.ALLOTED);
-        book.setAllotementDate(new Date());
-        book.setAllotmentDurationDays(allotmentDurationDays);
-        return true;
-    }
-
-    public void returnBook(Book book){
-        book.setAvailabilityStatus(BookAvailabilityEnum.AvailabilityStatus.AVAILABLE);
-        book.setAllotementDate(null);
-        book.setAllotmentDurationDays(0);
     }
 
 }

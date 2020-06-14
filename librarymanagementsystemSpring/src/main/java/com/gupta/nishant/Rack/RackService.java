@@ -43,7 +43,7 @@ public class RackService {
      *              If rack already exists then add the book to the rack
      *              If rack has already reached its capacity then create another rack for the same letter
      */
-    public Rack addBookToRack(Book book){
+    public Book addBookToRack(Book book){
 //        TODO: add validation for book.name should not be null
         char bookNameFirstLetter = book.getName().charAt(0);
 //        If it is the first book to be added to the rack, then create the rack to add the book to
@@ -57,12 +57,11 @@ public class RackService {
         }else{
 //            Fetch the empty rack ( last rack from map ) from the book's first letter
             List<Rack> rackList = rackMap.get(bookNameFirstLetter);
-            rackToAddBook = rackList.get(rackList.size());
+            rackToAddBook = rackList.get(rackList.size()-1);
         }
 //        Add book to the rack
         try{
             boolean bookAddedToRack = rackToAddBook.addBook(book);
-            return rackToAddBook;
         } catch(RackFullException rackFullException){
 //                If rack is full then create anoter rack for the same letter and add the book to it.
             Rack newRackForExpansion = new Rack(bookNameFirstLetter);
@@ -72,7 +71,8 @@ public class RackService {
 //                Nothing to do here since this is dead code and will never come here until rack capacity <= 0
             }
             rackMap.get(bookNameFirstLetter).add(newRackForExpansion);
-            return newRackForExpansion;
+        } finally{
+            return book;
         }
 
     }

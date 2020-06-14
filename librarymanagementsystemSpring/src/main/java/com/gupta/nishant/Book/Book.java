@@ -1,40 +1,27 @@
 package com.gupta.nishant.Book;
 
-import com.gupta.nishant.Rack.Rack;
-import com.gupta.nishant.Rack.RackService;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import java.util.Date;
+import java.util.UUID;
 
 public class Book {
 
+    private UUID uuid;
     private String name;
     private String genre;
     private int cost;
     private int finePerDay;
     private BookAvailabilityEnum.AvailabilityStatus availabilityStatus;
-    private Date allotementDate;
+    private Date allotmentDate;
     private int allotmentDurationDays;
 
-    @Autowired
-    private RackService rackService;
-
-    public Book(String name, String genre, int cost, int finePerDay) {
+    public Book(String name, String genre, int cost, int finePerDay, BookAvailabilityEnum.AvailabilityStatus availableStatus, UUID uuid) {
         this.name = name;
         this.genre = genre;
         this.cost = cost;
         this.finePerDay = finePerDay;
-        this.availabilityStatus = BookAvailabilityEnum.AvailabilityStatus.AVAILABLE;
-    }
-
-    /**
-     *         Allocates a rack to the book based on the name of the book ( racks to have books in alphabetical order )
-     *         APPROACH -   Based on name get the rack number
-     *                      Check and create rack if required with default capacity
-     *                      If capacity is full then create another rack
-     */
-    public Rack allocateRack(Book book){
-        return rackService.addBookToRack(book);
+//        By default while adding the book to library it should be available
+        this.availabilityStatus = (availableStatus!=null) ? availableStatus: BookAvailabilityEnum.AvailabilityStatus.AVAILABLE;
+        this.uuid = uuid!=null ? uuid : UUID.randomUUID();
     }
 
     @Override
@@ -100,19 +87,27 @@ public class Book {
         this.availabilityStatus = availabilityStatus;
     }
 
-    public Date getAllotementDate() {
-        return allotementDate;
-    }
-
-    public void setAllotementDate(Date allotementDate) {
-        this.allotementDate = allotementDate;
-    }
-
     public int getAllotmentDurationDays() {
         return allotmentDurationDays;
     }
 
     public void setAllotmentDurationDays(int allotmentDurationDays) {
         this.allotmentDurationDays = allotmentDurationDays;
+    }
+
+    public UUID getUuid() {
+        return uuid;
+    }
+
+//    public void setUuid(UUID uuid) {
+//        this.uuid = uuid;
+//    }
+
+    public Date getAllotmentDate() {
+        return allotmentDate;
+    }
+
+    public void setAllotmentDate(Date allotmentDate) {
+        this.allotmentDate = allotmentDate;
     }
 }

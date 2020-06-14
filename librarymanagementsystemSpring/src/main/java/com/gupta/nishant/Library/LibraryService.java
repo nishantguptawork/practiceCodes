@@ -8,8 +8,10 @@ import com.gupta.nishant.Rack.Rack;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
-public class LibraryService implements LibraryInteface{
+public class LibraryService implements LibraryInterface{
 
     @Autowired
     public BookService bookService;
@@ -23,23 +25,23 @@ public class LibraryService implements LibraryInteface{
     */
 
     @Override
-    public Rack findBook(Book book) throws BookNotFoundException {
-        return bookService.findBook(book);
+    public Rack findBook(UUID uuid) throws BookNotFoundException {
+        return bookService.findBook(uuid);
     }
 
     @Override
-    public Rack addBook(Book book) {
+    public Book addBook(Book book) {
         return bookService.addBook(book);
     }
 
     @Override
-    public boolean allotBook(Book book, int allotmentDurationDays) {
-        return bookService.allotBook(book, allotmentDurationDays);
+    public boolean allotBook(UUID uuid, int allotmentDurationDays) {
+        return bookService.allotBook(uuid, allotmentDurationDays);
     }
 
     @Override
-    public long returnBook(Book book) throws BookNotAllotedException,BookNotFoundException {
-        return bookService.returnBook(book);
+    public long returnBook(UUID uuid) throws BookNotAllotedException,BookNotFoundException {
+        return bookService.returnBook(uuid);
     }
 
 }
