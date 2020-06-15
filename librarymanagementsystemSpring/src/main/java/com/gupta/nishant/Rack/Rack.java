@@ -5,6 +5,7 @@ import com.gupta.nishant.Book.Book;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class Rack {
 
@@ -14,8 +15,9 @@ public class Rack {
     private int identity;
     private int capacity;
     private char letter;
+    private UUID uuid;
 
-//    static counter to give identity to each new rack created.
+    //    static counter to give identity to each new rack created.
     private static int rackCount = 0;
 
 //    Constructor to create a rack with default capacity
@@ -24,6 +26,7 @@ public class Rack {
         this.capacity = Constants.capacity;
         this.books = new ArrayList<>();
         this.identity = rackCount++;
+        this.uuid = UUID.randomUUID();
     }
 
 //    Overloaded constructor
@@ -33,6 +36,7 @@ public class Rack {
         this.letter = letter;
         this.books = new ArrayList<>();
         this.identity = rackCount++;
+        this.uuid = UUID.randomUUID();
     }
 
     public int getIdentity() {
@@ -59,6 +63,15 @@ public class Rack {
     public void setLetter(char letter) {
         this.letter = letter;
     }
+
+    public UUID getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(UUID uuid) {
+        this.uuid = uuid;
+    }
+
 
     /**
      *     Adds book to a rack. Throws RackFullException when rack has reached its capacity and no books can be added further

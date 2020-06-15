@@ -52,14 +52,16 @@ public class LibraryController {
 
     @RequestMapping(value="/library/book/allotment", method=RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
-    public ResponseEntity<Boolean> allotBook(@RequestParam UUID uuid, @RequestParam int allotmentDurationDays){
-        return ResponseEntity.ok(libraryService.allotBook(uuid,allotmentDurationDays));
+    public ResponseEntity<ResponseBaseEntity> allotBook(@RequestParam UUID uuid, @RequestParam int allotmentDurationDays){
+        SuccessfulResponseEntity response = new SuccessfulResponseEntity("Book allotment done.",libraryService.allotBook(uuid,allotmentDurationDays));
+        return ResponseEntity.ok().body(response);
     }
 
     @RequestMapping(value="/library/book/allotment", method=RequestMethod.DELETE, produces = {MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
-    public ResponseEntity<Long> returnBook(@RequestParam UUID uuid) throws BookNotFoundException, BookNotAllotedException {
-        return ResponseEntity.ok(libraryService.returnBook(uuid));
+    public ResponseEntity<ResponseBaseEntity> returnBook(@RequestParam UUID uuid) throws BookNotFoundException, BookNotAllotedException {
+        SuccessfulResponseEntity response = new SuccessfulResponseEntity("Book returned.",libraryService.returnBook(uuid));
+        return ResponseEntity.ok().body(response);
     }
 
 }
